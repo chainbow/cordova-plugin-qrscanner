@@ -1,8 +1,12 @@
 const webpack = require('webpack');
 const path = require('path');
 
+const nodeEnv = process.env.NODE_ENV
+const isProduction = nodeEnv !== 'development'
+
 module.exports = {
-  devtool: 'source-map',
+  mode: isProduction ? 'production' : 'development',
+  devtool: isProduction ? false : 'source-map',
   entry: {
     worker: path.join(__dirname, './src/browser/src/library.js')
   },
@@ -14,9 +18,6 @@ module.exports = {
     umdNamedDefine: true
   },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      comments: false,
-      sourceMap: true
-    })
+    
   ]
 };

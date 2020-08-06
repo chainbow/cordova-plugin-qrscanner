@@ -15,32 +15,32 @@ function webpack(config, callback){
   });
 }
 
-gulp.task('prepack', function(cb){
+exports.prepack = function(cb){
   webpack('webpack.prepack.config.js', cb);
-});
+};
 
-gulp.task('webpack-cordova', ['prepack'], function(cb){
+exports.webpackCordova = gulp.series(exports.prepack, function(cb){
   webpack('webpack.cordova.config.js', cb);
 });
 
-gulp.task('dist', ['prepack'], function(cb){
+exports.dist = gulp.series(exports.prepack, function(cb){
   webpack('webpack.library.config.js', cb);
 });
 
-gulp.task('remap', ['webpack-cordova'], function () {
+exports.remap = gulp.series(exports.webpackCordova, function () {
   return gulp.src(['dist/plugin.min.js', 'dist/www.min.js'])
   .pipe(insert.prepend(remap))
   .pipe(gulp.dest('dist'));
 });
 
-gulp.task('plugin', ['remap'], function () {
+exports.plugin = gulp.series(exports.remap, function () {
   return gulp.src(['dist/plugin.min.js'])
   .pipe(gulp.dest('src/browser'));
 });
 
-gulp.task('www', ['remap'], function () {
+exports.www = gulp.series(exports.remap, function () {
   return gulp.src(['dist/www.min.js'])
   .pipe(gulp.dest('www'));
 });
 
-gulp.task('default', ['dist', 'plugin', 'www']);
+exports.default = gulp.series(exports.dist, exports.plugin, exports.www);
