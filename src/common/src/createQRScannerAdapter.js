@@ -147,7 +147,7 @@ function doneCallback(callback, clear) {
   }
   return function(statusDict) {
     if (clear) {
-      clearBackground();
+      //clearBackground();
     }
     callback(convertStatus(statusDict));
   };
